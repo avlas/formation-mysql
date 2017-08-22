@@ -96,12 +96,10 @@ INNER JOIN agence a ON a.idAgence=la.idAgence
 WHERE a.nom='laforet';
 
 /* Question 15 : Affichez le nombre de propriétaires dans la ville de Paris (Alias : Nombre) */
-SELECT COUNT(DISTINCT idPersonne) Nombre
-FROM logement_personne
-WHERE idLogement IN
-    (SELECT idLogement
-     FROM logement
-     WHERE ville = "Paris");
+SELECT COUNT(DISTINCT idPersonne) AS Nombre
+FROM logement_personne lp
+INNER JOIN logement l ON lp.idLogement = l.idLogement
+WHERE l.ville = "paris";
 
 /* Question 16 : Affichez les informations des trois premieres personnes souhaitant acheter un logement */
 SELECT * 
@@ -144,8 +142,20 @@ WHERE l.idLogement = 5091;
 
 /* Question 23 : Si l’ensemble des logements étaient vendus ou loués demain, quel serait le bénéfice généré grâce aux frais d’agence et pour chaque agence
 (Alias : benefice, classement : par ordre croissant des gains) */
+SELECT a.nom,
+       sum(la.frais) AS 'benefice'
+FROM agence a
+INNER JOIN logement_agence la ON la.idAgence = a.idAgence 
+GROUP BY a.nom
+ORDER BY sum(la.frais);
 
 /* Question 24 : Affichez les id des biens en location, les prix, suivis des frais d’agence (classement : dans l’ordre croissant des prix) */
+SELECT l.idLogement, l.prix, la.frais
+FROM logement l
+INNER JOIN logement_agence la ON la.idLogement = l.idLogement 
+WHERE l.categorie = 'location'
+ORDER BY l.prix ASC;
+
 /* Question 25 : Quel est le prénom du propriétaire proposant le logement le moins cher à louer ? */
 /* Question 26 : Affichez le prénom et la ville où se trouve le logement de chaque propriétaire */
 /* Question 27 : Quel est l’agence immobilière s’occupant de la plus grande gestion de logements répertoriés à Paris ? (alias : nombre, classement : trié par
