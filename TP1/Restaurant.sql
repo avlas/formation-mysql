@@ -105,3 +105,10 @@ VALUES
     (3, '2017-08-03', 2000),
 	(4, '2017-08-04', 1450),
 	(3, '2017-08-05', 700);
+   
+/* Jointure - plat - ingredient */
+SELECT plat.platName, ingredient.ingredientName 
+FROM plat_ingredients
+RIGHT JOIN plat ON plat.ID=plat_ingredients.platID 
+LEFT JOIN ingredient ON ingredient.ID=plat_ingredients.ingredientID
+ORDER BY plat.platName;
