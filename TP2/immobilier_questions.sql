@@ -186,7 +186,7 @@ SELECT (l.prix+la.frais) AS 'prix_final',
 		p.prenom
 FROM personne p
 INNER JOIN logement_personne lp ON lp.idPersonne = p.idPersonne
-INNER JOIN logement_agence la ON lp.idLogement = la.idLogement
+INNER JOIN logement_agence la ON la.idLogement = lp.idLogement
 INNER JOIN logement l ON l.idLogement = la.idLogement
 WHERE (l.prix+la.frais) <= 130000;
 
