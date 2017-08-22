@@ -172,11 +172,34 @@ FROM personne p
 INNER JOIN logement_personne lp ON lp.idPersonne = p.idPersonne
 INNER JOIN logement l ON l.idLogement = lp.idLogement;
                                             
-/* Question 27 : Quel est l’agence immobilière s’occupant de la plus grande gestion de logements répertoriés à Paris ? (alias : nombre, classement : trié par
-ordre décroissant) */
+/* Question 27 : Quel est l’agence immobilière s’occupant de la plus grande gestion de logements répertoriés à Paris ? (alias : nombre, classement : trié par ordre décroissant) */
+SELECT a.nom, COUNT(la.idLogement) nombre
+FROM logement_agence la
+INNER JOIN agence a ON a.idAgence = la.idAgence
+INNER JOIN logement l ON l.idLogement = la.idLogement
+WHERE l.ville = 'paris'
+GROUP BY a.nom
+ORDER BY nombre DESC ;
 
-/* Question 28 : Affichez le prix et le prénom des vendeurs dont les logements sont proposés à 130000 € ou moins en prix final avec frais appliqués par les
-agences (alias : prix final, classement : ordre croissant des prix finaux) : */
+/* Question 28 : Affichez le prix et le prénom des vendeurs dont les logements sont proposés à 130000 € ou moins en prix final avec frais appliqués par les agences (alias : prix final, classement : ordre croissant des prix finaux) : */
+SELECT (l.prix+la.frais) AS 'prix_final',
+		p.prenom
+FROM personne p
+INNER JOIN logement_personne lp ON lp.idPersonne = p.idPersonne
+INNER JOIN logement_agence la ON lp.idLogement = la.idLogement
+INNER JOIN logement l ON l.idLogement = la.idLogement
+WHERE (l.prix+la.frais) <= 130000;
 
-/* Question 29 : Afficher toutes les demandes enregistrées avec la personne à l'origine de la demande (Afficher également les demandes d'anciennes personnes n'existant plus dans notre base de données). */
-/* Question 30 : Afficher toutes les personnes enregistrées avec leur demandes correspondantes (Afficher également les personnes n'ayant pas formulé de demandes). */
+/* Question 29 : Afficher toutes les demandes enregistrées avec la personne à l'origine de la demande 
+(Afficher également les demandes d'anciennes personnes n'existant plus dans notre base de données). */
+SELECT d.*,
+       p.prenom
+FROM demande d
+LEFT JOIN personne p ON p.idPersonne = d.idPersonne;
+
+/* Question 30 : Afficher toutes les personnes enregistrées avec leur demandes correspondantes 
+(Afficher également les personnes n'ayant pas formulé de demandes). */
+SELECT d.*,
+       p.prenom
+FROM demande d
+RIGHT JOIN personne p ON p.idPersonne = d.idPersonne;
